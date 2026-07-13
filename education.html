@@ -113,6 +113,16 @@
   .rocks-name { font-size: 11.5px; font-weight: 700; margin: 2px 0 4px; }
   .rocks-desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
 
+  .section-title { font-family: var(--font-display); font-weight: 400; font-size: 22px; margin: 40px 0 4px; }
+  .section-hint { font-size: 13.5px; color: var(--ink-faint); margin: 0 0 14px; }
+  .leaderboard { border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; background: var(--paper-raised); }
+  .lb-countdown { font-family: var(--font-mono); font-size: 11.5px; color: var(--gold); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px; }
+  .lb-row { display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 9px; }
+  .lb-row .lb-name { width: 96px; flex-shrink: 0; }
+  .lb-row .bar { flex: 1; height: 8px; border-radius: 5px; background: var(--line); overflow: hidden; }
+  .lb-row .bar > span { display: block; height: 100%; background: var(--gold); }
+  .lb-row .amount { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); width: 56px; text-align: right; flex-shrink: 0; }
+
   footer.note { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-faint); max-width: 60ch; }
   footer.note a { color: var(--forest); }
 </style>
@@ -179,6 +189,16 @@
     <div class="rocks-item"><div class="rocks-letter">C</div><div class="rocks-name">Context</div><div class="rocks-desc">Neden istediğini, kimin için olduğunu ekle.</div></div>
     <div class="rocks-item"><div class="rocks-letter">K</div><div class="rocks-name">Knowledge</div><div class="rocks-desc">Somut bir detay ya da sayı ver.</div></div>
     <div class="rocks-item"><div class="rocks-letter">S</div><div class="rocks-name">Style</div><div class="rocks-desc">Cevap nasıl görünsün, söyle.</div></div>
+  </div>
+
+  <h2 class="section-title">Okullar Arası Yarışma</h2>
+  <p class="section-hint">Gerçek üründe, her okulun/Bezirk'in haftalık su tasarrufu birbiriyle yarışıyor. Aşağıdaki örnek bir konsept görseli — canlı veri değil, tasarımın nasıl işleyeceğini gösteriyor.</p>
+  <div class="leaderboard">
+    <div class="lb-countdown">Bu hafta kalan: 3 gün 4 saat</div>
+    <div class="lb-row"><span class="lb-name">1. Meidling</span><div class="bar"><span style="width:92%"></span></div><span class="amount">500 L</span></div>
+    <div class="lb-row"><span class="lb-name">2. Favoriten</span><div class="bar"><span style="width:78%"></span></div><span class="amount">410 L</span></div>
+    <div class="lb-row"><span class="lb-name">3. Ottakring</span><div class="bar"><span style="width:55%"></span></div><span class="amount">290 L</span></div>
+    <div class="lb-row"><span class="lb-name">4. Döbling</span><div class="bar"><span style="width:31%"></span></div><span class="amount">160 L</span></div>
   </div>
 
   <footer class="note">
