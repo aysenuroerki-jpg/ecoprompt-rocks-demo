@@ -1,0 +1,412 @@
+<title>EcoPrompt ROCKS</title>
+<style>
+  :root {
+    --paper: #f4f6f1;
+    --paper-raised: #ffffff;
+    --ink: #12181f;
+    --ink-soft: #454f47;
+    --ink-faint: #6f7a70;
+    --brand: #146c4e;
+    --brand-soft: #dce9e1;
+    --river: #2a7c9e;
+    --river-soft: #d8ebf1;
+    --coral: #a13b26;
+    --coral-soft: #f4dcd3;
+    --line: #d7ddd2;
+    --code-bg: #10201a;
+    --font-display: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: "Segoe UI", ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", Consolas, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0f1512; --paper-raised: #161d19;
+      --ink: #eef1ec; --ink-soft: #b7c2ba; --ink-faint: #7c8a7e;
+      --brand: #4bbd93; --brand-soft: #15271e;
+      --river: #7cc7e2; --river-soft: #12262d;
+      --coral: #e2795a; --coral-soft: #2c1811;
+      --line: #263229; --code-bg: #0b1210;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0f1512; --paper-raised: #161d19;
+    --ink: #eef1ec; --ink-soft: #b7c2ba; --ink-faint: #7c8a7e;
+    --brand: #4bbd93; --brand-soft: #15271e;
+    --river: #7cc7e2; --river-soft: #12262d;
+    --coral: #e2795a; --coral-soft: #2c1811;
+    --line: #263229; --code-bg: #0b1210;
+  }
+  :root[data-theme="light"] {
+    --paper: #f4f6f1; --paper-raised: #ffffff;
+    --ink: #12181f; --ink-soft: #454f47; --ink-faint: #6f7a70;
+    --brand: #146c4e; --brand-soft: #dce9e1;
+    --river: #2a7c9e; --river-soft: #d8ebf1;
+    --coral: #a13b26; --coral-soft: #f4dcd3;
+    --line: #d7ddd2; --code-bg: #10201a;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+
+  .shell { max-width: 720px; margin: 0 auto; padding: 56px 24px 72px; }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--brand); display: flex; align-items: center; gap: 8px;
+  }
+  .eyebrow .drop { width: 8px; height: 8px; border-radius: 50% 50% 50% 0; background: var(--river); transform: rotate(45deg); display: inline-block; }
+
+  h1 {
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 5vw, 40px);
+    margin: 12px 0 10px; letter-spacing: -0.02em; text-wrap: balance;
+  }
+  p.lead { font-size: 16.5px; color: var(--ink-soft); max-width: 60ch; margin: 0 0 8px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+  .chip { font-family: var(--font-mono); font-size: 11.5px; padding: 5px 10px; border-radius: 5px; background: var(--paper-raised); border: 1px solid var(--line); color: var(--ink-soft); }
+
+  /* demo */
+  .demo-panel {
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px;
+    margin-top: 32px; border: 1px solid var(--line); border-radius: 14px; padding: 22px; background: var(--paper-raised);
+  }
+  @media (max-width: 640px) { .demo-panel { grid-template-columns: 1fr; } }
+
+  .demo-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .demo-ex-btn {
+    font-family: var(--font-mono); font-size: 12px; padding: 6px 10px; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft); cursor: pointer;
+  }
+  .demo-ex-btn:hover { border-color: var(--brand); color: var(--brand); }
+  .demo-lang-select {
+    margin-left: auto; font-family: var(--font-mono); font-size: 12px; padding: 6px 8px;
+    border-radius: 6px; border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft);
+  }
+
+  .demo-textarea {
+    width: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; font-family: var(--font-body); font-size: 14.5px; background: var(--paper); color: var(--ink);
+  }
+  .demo-textarea:focus-visible { outline: 2px solid var(--river); outline-offset: 1px; }
+
+  .demo-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px; background: var(--river-soft); color: var(--river);
+  }
+  .badge.warn { background: var(--coral-soft); color: var(--coral); }
+  .badge.good { background: var(--brand-soft); color: var(--brand); }
+
+  .demo-submit-btn {
+    font-family: var(--font-mono); font-size: 13px; padding: 8px 18px; border-radius: 7px;
+    border: none; background: var(--brand); color: var(--paper-raised); cursor: pointer; font-weight: 600;
+  }
+  .demo-submit-btn:hover { filter: brightness(1.08); }
+  .demo-submit-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  .demo-checklist { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .demo-check-item {
+    display: flex; align-items: center; gap: 6px; font-family: var(--font-mono);
+    font-size: 11.5px; color: var(--ink-faint); padding: 5px 9px; border-radius: 20px; border: 1px solid var(--line);
+  }
+  .demo-check-item .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+  .demo-check-item.on { color: var(--brand); border-color: var(--brand-soft); background: var(--brand-soft); }
+  .demo-check-item.on .dot { background: var(--brand); }
+
+  .demo-msg {
+    margin-top: 10px; border-radius: 8px; padding: 10px 12px; background: var(--river-soft);
+    border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft); min-height: 1.2em;
+  }
+  .demo-msg.state-good { background: var(--brand-soft); }
+  .demo-msg.state-warn { background: var(--coral-soft); }
+
+  .demo-garden { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: var(--paper); }
+  .demo-river-label { font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; font-family: var(--font-mono); }
+  .meter { height: 7px; border-radius: 5px; background: var(--line); overflow: hidden; margin: 6px 0; }
+  .meter > span { display: block; height: 100%; background: var(--river); transition: width .4s ease, background .4s ease; }
+  .meter.dirty > span { background: var(--coral); }
+  .stat-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .demo-reset-btn {
+    font-family: var(--font-mono); font-size: 11px; padding: 4px 9px; border-radius: 6px;
+    border: 1px dashed var(--line); background: transparent; color: var(--ink-faint); cursor: pointer;
+  }
+  .demo-reset-btn:hover { color: var(--coral); border-color: var(--coral); }
+  .demo-log { margin-top: 14px; max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+  .demo-log-empty { color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); }
+  .demo-log-item { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+  .demo-log-item.good { color: var(--brand); }
+  .demo-log-item.warn { color: var(--coral); }
+
+  /* rocks explainer */
+  .rocks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 32px 0 8px; }
+  @media (max-width: 640px) { .rocks-grid { grid-template-columns: repeat(2, 1fr); } }
+  .rocks-item { border: 1px solid var(--line); border-radius: 10px; padding: 12px 12px 14px; background: var(--paper-raised); }
+  .rocks-letter { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--brand); }
+  .rocks-name { font-size: 11.5px; font-weight: 700; margin: 2px 0 4px; }
+  .rocks-desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
+
+  footer.note {
+    margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint); max-width: 60ch;
+  }
+</style>
+
+<div class="shell">
+  <div class="eyebrow"><span class="drop"></span>EcoPrompt ROCKS</div>
+  <h1>Yapay zekaya nasıl soru sorduğun, aldığın cevabı belirler</h1>
+  <p class="lead">ChatGPT, Gemini ya da Claude'a yazdığın bir prompt ne kadar net ve tam olursa, o kadar iyi bir cevap alırsın — hem de model daha az "zorlanır". <strong>ROCKS</strong> (Role, Objective, Context, Knowledge, Style) bunu 5 basit soruya indiren bir yöntem. Aşağıya kendi promptunu yaz, ya da örnek butonlarına bas.</p>
+  <div class="chips">
+    <span class="chip">Yeni başlayanlar için</span>
+    <span class="chip">ChatGPT · Gemini · Claude'da çalışan gerçek bir eklentinin motoru</span>
+  </div>
+
+  <div class="demo-panel">
+    <div class="demo-col">
+      <div class="demo-examples">
+        <button type="button" class="demo-ex-btn" data-example="weak">Zayıf örnek</button>
+        <button type="button" class="demo-ex-btn" data-example="strong">Güçlü (ROCKS) örnek</button>
+        <select id="demo-lang" class="demo-lang-select" aria-label="Dil">
+          <option value="tr">TR</option>
+          <option value="de">DE</option>
+          <option value="en">EN</option>
+        </select>
+      </div>
+      <textarea id="demo-prompt" class="demo-textarea" rows="4" placeholder="Örn: Bana ödev yap"></textarea>
+      <div class="demo-actions">
+        <span id="demo-water-badge" class="badge">💧 30 ml</span>
+        <button type="button" id="demo-submit" class="demo-submit-btn" disabled>Gönder</button>
+      </div>
+
+      <div class="demo-checklist" id="demo-checklist">
+        <div class="demo-check-item" data-key="role"><span class="dot"></span>Role</div>
+        <div class="demo-check-item" data-key="objective"><span class="dot"></span>Objective</div>
+        <div class="demo-check-item" data-key="context"><span class="dot"></span>Context</div>
+        <div class="demo-check-item" data-key="knowledge"><span class="dot"></span>Knowledge</div>
+        <div class="demo-check-item" data-key="style"><span class="dot"></span>Style</div>
+      </div>
+
+      <div class="demo-msg" id="demo-msg"></div>
+    </div>
+
+    <div class="demo-col">
+      <div class="demo-garden">
+        <div class="demo-river-label"><span>Verimlilik göstergesi</span><span id="demo-clarity-value">70%</span></div>
+        <div class="meter" id="demo-river-meter"><span style="width:70%"></span></div>
+        <div class="stat-row">
+          <span id="demo-coin-value">0 puan</span>
+          <button type="button" id="demo-reset" class="demo-reset-btn">Sıfırla</button>
+        </div>
+      </div>
+      <div class="demo-log" id="demo-log">
+        <div class="demo-log-empty">Henüz prompt gönderilmedi.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rocks-grid">
+    <div class="rocks-item"><div class="rocks-letter">R</div><div class="rocks-name">Role</div><div class="rocks-desc">AI'ya kim gibi davranacağını söyle.</div></div>
+    <div class="rocks-item"><div class="rocks-letter">O</div><div class="rocks-name">Objective</div><div class="rocks-desc">Net bir eylem iste: yaz, özetle, karşılaştır.</div></div>
+    <div class="rocks-item"><div class="rocks-letter">C</div><div class="rocks-name">Context</div><div class="rocks-desc">Neden istediğini, kim için olduğunu ekle.</div></div>
+    <div class="rocks-item"><div class="rocks-letter">K</div><div class="rocks-name">Knowledge</div><div class="rocks-desc">Somut bir detay ya da sayı ver.</div></div>
+    <div class="rocks-item"><div class="rocks-letter">S</div><div class="rocks-name">Style</div><div class="rocks-desc">Cevabın nasıl görünmesini istediğini söyle.</div></div>
+  </div>
+
+  <footer class="note">
+    Bu demo, gerçek bir Chrome/Edge eklentisinin (EcoPrompt ROCKS) çekirdek analiz motorunu tarayıcında çalıştırıyor — hiçbir şey bir sunucuya gönderilmiyor. Aynı motor, chatgpt.com/gemini.google.com/claude.ai'de canlı olarak da çalışıyor.
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var ROLE_KEYWORDS = {
+      en: ["as a", "as an", "act as", "you are a", "you are an", "acting as", "imagine you are"],
+      de: ["du bist ein", "du bist eine", "als ein ", "als eine ", "in der rolle", "übernimm die rolle"],
+      tr: ["sen bir", "senin rolün", "gibi davran", "rolünde"],
+    };
+    var OBJECTIVE_KEYWORDS = {
+      en: ["write", "explain", "summarize", "create", "list", "compare", "translate", "solve", "design"],
+      de: ["schreibe", "erkläre", "fasse zusammen", "erstelle", "liste", "vergleiche", "übersetze", "löse"],
+      tr: ["yaz", "açıkla", "özetle", "oluştur", "listele", "karşılaştır", "çevir", "çöz"],
+    };
+    var CONTEXT_KEYWORDS = {
+      en: ["because", "for my", "for a", "since", "given that", "so that", "grade", "years old"],
+      de: ["weil", "für mein", "für meine", "damit", "da ich", "klasse", "jahre alt"],
+      tr: ["çünkü", "için", "dolayı", "nedeniyle", "sınıf", "yaşında"],
+    };
+    var KNOWLEDGE_KEYWORDS = {
+      en: ["about", "topic"],
+      de: ["thema", "konu"],
+      tr: ["hakkında", "konusunda"],
+    };
+    var KNOWLEDGE_PATTERNS = [/"[^"]{3,}"/, /\d{1,4}/];
+    var STYLE_KEYWORDS = {
+      en: ["bullet points", "as a list", "short", "briefly", "simple language"],
+      de: ["stichpunkten", "kurz", "einfach erklärt", "kindgerecht"],
+      tr: ["madde madde", "kısaca", "basit bir dille", "kolay bir dille"],
+    };
+
+    var WATER_ML_MAX = 30;
+    var WATER_ML_MIN = 10;
+    var ML_PER_COMPONENT = (WATER_ML_MAX - WATER_ML_MIN) / 5;
+
+    function containsAny(text, keywordsByLang) {
+      var lower = text.toLowerCase();
+      return Object.keys(keywordsByLang).some(function (k) {
+        return keywordsByLang[k].some(function (kw) { return lower.indexOf(kw) !== -1; });
+      });
+    }
+
+    function analyzePromptROCKS(promptText) {
+      var text = (promptText || "").trim();
+      var matched = {
+        role: containsAny(text, ROLE_KEYWORDS),
+        objective: containsAny(text, OBJECTIVE_KEYWORDS),
+        context: containsAny(text, CONTEXT_KEYWORDS),
+        knowledge: containsAny(text, KNOWLEDGE_KEYWORDS) || KNOWLEDGE_PATTERNS.some(function (p) { return p.test(text); }),
+        style: containsAny(text, STYLE_KEYWORDS),
+      };
+      var score = Object.keys(matched).filter(function (k) { return matched[k]; }).length;
+      var waterMl = Math.max(WATER_ML_MIN, WATER_ML_MAX - score * ML_PER_COMPONENT);
+      var ecoCoins = Math.round((WATER_ML_MAX - waterMl) / 2);
+      var missing = Object.keys(matched).filter(function (k) { return !matched[k]; });
+      return { score: score, matched: matched, waterMl: waterMl, ecoCoins: ecoCoins, missing: missing };
+    }
+
+    var MESSAGES = {
+      tr: {
+        role: "Bir ROL yok! 'Sen bir tarih öğretmenisin' gibi bir cümleyle başla.",
+        objective: "AMAÇ belirsiz. Net bir fiil kullan: yaz, açıkla, özetle...",
+        context: "BAĞLAM eksik. Bunu neden istediğini ya da kim için olduğunu ekle.",
+        knowledge: "BİLGİ eksik. Konuyla ilgili somut bir detay veya sayı ver.",
+        style: "STİL belirsiz. Cevap kısa mı olsun, madde madde mi?",
+        good: "Güçlü prompt! Model daha az zorlanacak, daha iyi bir cevap alacaksın.",
+        empty: "Yazmaya başla...",
+      },
+      de: {
+        role: "Dir fehlt eine ROLLE! Zum Beispiel: 'Du bist ein Geschichtslehrer'.",
+        objective: "Das ZIEL ist unklar. Nutze ein klares Verb: schreibe, erkläre, fasse zusammen...",
+        context: "Der KONTEXT fehlt. Sag, wofür oder für wen du das brauchst.",
+        knowledge: "Das WISSEN fehlt. Gib ein konkretes Detail oder eine Zahl dazu.",
+        style: "Der STIL ist offen. Kurz? In Stichpunkten?",
+        good: "Starker Prompt! Das Modell muss weniger raten, du bekommst eine bessere Antwort.",
+        empty: "Schreib los...",
+      },
+      en: {
+        role: "You're missing a ROLE! Try: 'You are a history teacher'.",
+        objective: "The OBJECTIVE is fuzzy. Use a clear verb: write, explain, summarize...",
+        context: "CONTEXT is missing. Say why you need this or who it's for.",
+        knowledge: "KNOWLEDGE is missing. Add one concrete detail or number.",
+        style: "STYLE is open. Short? Bullet points?",
+        good: "Strong prompt! The model has to guess less, so you get a better answer.",
+        empty: "Start typing...",
+      },
+    };
+
+    var EXAMPLES = {
+      weak: "Bana ödev yap",
+      strong: "Sen bir tarih öğretmenisin. 5. sınıf öğrencisi için, çünkü yarın sınavım var, Viyana'nın kuruluşu hakkında 100 kelimeyi geçmeyen, madde madde ve basit bir dille bir özet yaz.",
+    };
+
+    var lang = "tr";
+    var state = { clarity: 70, coins: 0, submissions: 0 };
+
+    var els = {
+      textarea: document.getElementById("demo-prompt"),
+      waterBadge: document.getElementById("demo-water-badge"),
+      submitBtn: document.getElementById("demo-submit"),
+      resetBtn: document.getElementById("demo-reset"),
+      checklist: document.getElementById("demo-checklist"),
+      msg: document.getElementById("demo-msg"),
+      langSelect: document.getElementById("demo-lang"),
+      clarityValue: document.getElementById("demo-clarity-value"),
+      riverMeter: document.getElementById("demo-river-meter"),
+      coinValue: document.getElementById("demo-coin-value"),
+      log: document.getElementById("demo-log"),
+    };
+
+    function render() {
+      var text = els.textarea.value;
+      var analysis = analyzePromptROCKS(text);
+      var dict = MESSAGES[lang];
+
+      els.waterBadge.textContent = "💧 " + Math.round(analysis.waterMl) + " ml";
+      els.waterBadge.className = "badge" + (text.trim() ? (analysis.score >= 4 ? " good" : " warn") : "");
+
+      Object.keys(analysis.matched).forEach(function (key) {
+        var item = els.checklist.querySelector('[data-key="' + key + '"]');
+        if (item) item.classList.toggle("on", analysis.matched[key]);
+      });
+
+      if (!text.trim()) {
+        els.msg.textContent = dict.empty;
+        els.msg.className = "demo-msg";
+      } else if (analysis.score >= 4) {
+        els.msg.textContent = dict.good;
+        els.msg.className = "demo-msg state-good";
+      } else {
+        els.msg.textContent = dict[analysis.missing[0]];
+        els.msg.className = "demo-msg state-warn";
+      }
+
+      els.submitBtn.disabled = !text.trim();
+      return analysis;
+    }
+
+    function renderGarden() {
+      els.clarityValue.textContent = Math.round(state.clarity) + "%";
+      els.riverMeter.querySelector("span").style.width = state.clarity + "%";
+      els.riverMeter.classList.toggle("dirty", state.clarity < 50);
+      els.coinValue.textContent = state.coins + " puan";
+    }
+
+    function logSubmission(analysis) {
+      var empty = els.log.querySelector(".demo-log-empty");
+      if (empty) els.log.innerHTML = "";
+      var row = document.createElement("div");
+      row.className = "demo-log-item " + (analysis.score >= 4 ? "good" : "warn");
+      row.textContent = "#" + state.submissions + " — " + Math.round(analysis.waterMl) + "ml · " + analysis.score + "/5 ROCKS";
+      els.log.insertBefore(row, els.log.firstChild);
+    }
+
+    function commit() {
+      var text = els.textarea.value;
+      if (!text.trim()) return;
+      var analysis = analyzePromptROCKS(text);
+      var healthy = analysis.score >= 4;
+      state.clarity = Math.min(100, Math.max(0, state.clarity + (healthy ? 3 : -5)));
+      state.coins += analysis.ecoCoins;
+      state.submissions++;
+      renderGarden();
+      logSubmission(analysis);
+      els.textarea.value = "";
+      render();
+    }
+
+    function reset() {
+      state = { clarity: 70, coins: 0, submissions: 0 };
+      els.textarea.value = "";
+      els.log.innerHTML = '<div class="demo-log-empty">Henüz prompt gönderilmedi.</div>';
+      renderGarden();
+      render();
+    }
+
+    els.textarea.addEventListener("input", render);
+    els.submitBtn.addEventListener("click", commit);
+    els.resetBtn.addEventListener("click", reset);
+    els.langSelect.addEventListener("change", function () {
+      lang = els.langSelect.value;
+      render();
+    });
+    document.querySelectorAll(".demo-ex-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        els.textarea.value = EXAMPLES[btn.getAttribute("data-example")];
+        render();
+        els.textarea.focus();
+      });
+    });
+
+    renderGarden();
+    render();
+  })();
+</script>

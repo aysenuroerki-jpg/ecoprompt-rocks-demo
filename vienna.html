@@ -1,0 +1,1196 @@
+<title>EcoPrompt / EcoAI Vienna — Ürün Mimarisi</title>
+<style>
+  :root {
+    --paper: #eef1e8;
+    --paper-raised: #ffffff;
+    --ink: #16241c;
+    --ink-soft: #445143;
+    --ink-faint: #6c7a6a;
+    --forest: #1f5c45;
+    --forest-soft: #dbe8de;
+    --river: #2a7c9e;
+    --river-soft: #d8ebf1;
+    --gold: #a9721f;
+    --gold-soft: #f3e3c4;
+    --coral: #a8461f;
+    --coral-soft: #f5ddd1;
+    --line: #cdd6c8;
+    --code-bg: #14211a;
+    --code-ink: #dfe9e0;
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    --font-body: "Segoe UI", ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", Consolas, "SFMono-Regular", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0e1712;
+      --paper-raised: #142019;
+      --ink: #eef1e8;
+      --ink-soft: #b7c3b8;
+      --ink-faint: #7f8d80;
+      --forest: #57b78e;
+      --forest-soft: #16281f;
+      --river: #7cc7e2;
+      --river-soft: #12262d;
+      --gold: #e0ab55;
+      --gold-soft: #2a2114;
+      --coral: #e2795a;
+      --coral-soft: #2c1811;
+      --line: #26362c;
+      --code-bg: #0b1210;
+      --code-ink: #d7e5da;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0e1712;
+    --paper-raised: #142019;
+    --ink: #eef1e8;
+    --ink-soft: #b7c3b8;
+    --ink-faint: #7f8d80;
+    --forest: #57b78e;
+    --forest-soft: #16281f;
+    --river: #7cc7e2;
+    --river-soft: #12262d;
+    --gold: #e0ab55;
+    --gold-soft: #2a2114;
+    --coral: #e2795a;
+    --coral-soft: #2c1811;
+    --line: #26362c;
+    --code-bg: #0b1210;
+    --code-ink: #d7e5da;
+  }
+  :root[data-theme="light"] {
+    --paper: #eef1e8;
+    --paper-raised: #ffffff;
+    --ink: #16241c;
+    --ink-soft: #445143;
+    --ink-faint: #6c7a6a;
+    --forest: #1f5c45;
+    --forest-soft: #dbe8de;
+    --river: #2a7c9e;
+    --river-soft: #d8ebf1;
+    --gold: #a9721f;
+    --gold-soft: #f3e3c4;
+    --coral: #a8461f;
+    --coral-soft: #f5ddd1;
+    --line: #cdd6c8;
+    --code-bg: #14211a;
+    --code-ink: #dfe9e0;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--forest); }
+  ::selection { background: var(--gold-soft); }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+    display: grid;
+    grid-template-columns: 216px minmax(0, 1fr);
+    gap: 48px;
+  }
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: 1fr; }
+  }
+
+  header.masthead {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 24px 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--forest);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow .drop {
+    width: 8px; height: 8px; border-radius: 50% 50% 50% 0;
+    background: var(--river); transform: rotate(45deg); display: inline-block;
+  }
+  h1.title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 40px);
+    margin: 10px 0 8px;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 15.5px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    font-size: 13.5px;
+    padding-top: 40px;
+  }
+  nav.toc a {
+    display: block;
+    padding: 6px 0 6px 12px;
+    border-left: 2px solid var(--line);
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  nav.toc a:hover { color: var(--forest); border-left-color: var(--forest); }
+  nav.toc .toc-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  @media (max-width: 860px) {
+    nav.toc {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      gap: 4px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    nav.toc .toc-title { display: none; }
+    nav.toc a { border-left: none; border-bottom: 2px solid var(--line); white-space: nowrap; padding: 6px 10px; }
+  }
+
+  main { min-width: 0; padding-top: 40px; }
+  section { margin-bottom: 72px; scroll-margin-top: 24px; }
+  section > .kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 26px;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 18.5px;
+    margin: 30px 0 10px;
+  }
+  p { max-width: 74ch; color: var(--ink-soft); font-size: 15.5px; }
+  p.lead { color: var(--ink); font-size: 16.5px; }
+  ul.plain, ol.plain { max-width: 74ch; color: var(--ink-soft); font-size: 15.5px; padding-left: 20px; }
+  ul.plain li, ol.plain li { margin-bottom: 6px; }
+  strong { color: var(--ink); }
+
+  .callout {
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    border-left: 3px solid var(--river);
+    border-radius: 6px;
+    padding: 14px 18px;
+    max-width: 74ch;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    margin: 18px 0;
+  }
+  .callout strong { color: var(--river); }
+  .callout.warn { border-left-color: var(--coral); }
+  .callout.warn strong { color: var(--coral); }
+
+  /* flow diagram */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0;
+    margin: 22px 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-raised);
+  }
+  .flow-node {
+    flex: 1 1 160px;
+    padding: 14px 16px;
+    border-right: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .flow-node:last-child { border-right: none; }
+  .flow-node .fn-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+  .flow-node .fn-name { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .flow-node .fn-desc { color: var(--ink-soft); font-size: 12.5px; }
+  .flow-node.accent-forest { background: var(--forest-soft); }
+  .flow-node.accent-river { background: var(--river-soft); }
+  .flow-node.accent-gold { background: var(--gold-soft); }
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 6px; color: var(--ink-faint); font-size: 15px;
+  }
+  @media (max-width: 700px) {
+    .flow { flex-direction: column; }
+    .flow-node { border-right: none; border-bottom: 1px dashed var(--line); }
+    .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
+  }
+
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 700px) { .mode-grid { grid-template-columns: 1fr; } }
+  .mode-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px;
+    background: var(--paper-raised);
+  }
+  .mode-card h4 {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    color: var(--forest);
+  }
+  .mode-card p { font-size: 14px; margin: 0; }
+
+  /* wireframes */
+  .wire-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin: 24px 0;
+  }
+  @media (max-width: 760px) { .wire-grid { grid-template-columns: 1fr; } }
+  .wire-frame {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper-raised);
+    overflow: hidden;
+  }
+  .wire-chrome {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 60%, var(--paper-raised));
+  }
+  .wire-chrome .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+  .wire-chrome .wire-title {
+    font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-left: 4px;
+  }
+  .wire-body { padding: 16px; }
+  .wire-box {
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+  }
+  .wire-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--river-soft); color: var(--river);
+    border-radius: 20px; padding: 5px 11px; font-size: 12px; font-weight: 600;
+  }
+  .wire-robby {
+    margin-top: 10px; border-radius: 8px; padding: 10px 12px;
+    background: var(--gold-soft); border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft);
+  }
+  .meter { height: 8px; border-radius: 5px; background: var(--line); overflow: hidden; margin: 6px 0; }
+  .meter > span { display: block; height: 100%; background: var(--river); }
+  .meter.dirty > span { background: var(--coral); }
+  .tree-row { display: flex; gap: 10px; align-items: flex-end; margin: 10px 0; }
+  .tree {
+    width: 22px; height: 34px; position: relative;
+  }
+  .tree .canopy { width: 22px; height: 22px; border-radius: 50%; background: var(--forest); }
+  .tree .trunk { width: 4px; height: 10px; background: var(--gold); margin: 0 auto; }
+  .tree.small .canopy { width: 12px; height: 12px; opacity: 0.55; }
+  .stat-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+  .district-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .district-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .district-row .bar { flex: 1; height: 6px; border-radius: 4px; background: var(--line); overflow: hidden; }
+  .district-row .bar > span { display: block; height: 100%; background: var(--gold); }
+  .district-row .amount { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); width: 54px; text-align: right; }
+
+  /* code */
+  .code-card {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    margin: 18px 0 28px;
+  }
+  .code-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px;
+    background: var(--paper-raised);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+  }
+  .code-bar .lang { color: var(--forest); }
+  .code-scroll { overflow-x: auto; background: var(--code-bg); }
+  pre {
+    margin: 0;
+    padding: 16px 18px;
+    font-family: var(--font-mono);
+    font-size: 12.8px;
+    line-height: 1.65;
+    color: var(--code-ink);
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  /* microcopy tabs */
+  .lang-tabs { display: flex; gap: 6px; margin: 18px 0 0; }
+  .lang-tab {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    padding: 7px 14px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid var(--line);
+    border-bottom: none;
+    background: var(--paper);
+    color: var(--ink-faint);
+    cursor: pointer;
+  }
+  .lang-tab.active { background: var(--paper-raised); color: var(--forest); font-weight: 600; }
+  .lang-tab:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+
+  .copy-table-wrap {
+    border: 1px solid var(--line);
+    border-radius: 0 8px 8px 8px;
+    overflow-x: auto;
+    background: var(--paper-raised);
+  }
+  table.copy-table { border-collapse: collapse; width: 100%; min-width: 560px; }
+  table.copy-table th, table.copy-table td {
+    text-align: left; padding: 12px 16px; font-size: 13.5px; vertical-align: top;
+    border-bottom: 1px solid var(--line);
+  }
+  table.copy-table th {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--ink-faint); background: color-mix(in srgb, var(--paper) 55%, var(--paper-raised));
+  }
+  table.copy-table td.key { font-family: var(--font-mono); font-size: 11.5px; color: var(--gold); white-space: nowrap; }
+  table.copy-table td.text { color: var(--ink-soft); }
+  table.copy-table tr:last-child td { border-bottom: none; }
+  .copy-panel[hidden] { display: none; }
+
+  .lang-pack-note {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;
+  }
+  .lang-pack-note .pack {
+    font-family: var(--font-mono); font-size: 12px; padding: 6px 10px;
+    border-radius: 6px; border: 1px dashed var(--line); color: var(--ink-faint);
+  }
+
+  footer {
+    max-width: 1180px; margin: 0 auto; padding: 24px; text-align: center;
+    color: var(--ink-faint); font-size: 12.5px; border-top: 1px solid var(--line);
+  }
+
+  /* live demo */
+  .demo-panel {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 26px;
+    margin-top: 22px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    background: var(--paper-raised);
+  }
+  @media (max-width: 760px) { .demo-panel { grid-template-columns: 1fr; } }
+
+  .demo-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .demo-ex-btn {
+    font-family: var(--font-mono); font-size: 12px; padding: 6px 10px;
+    border-radius: 6px; border: 1px solid var(--line); background: var(--paper);
+    color: var(--ink-soft); cursor: pointer;
+  }
+  .demo-ex-btn:hover { border-color: var(--forest); color: var(--forest); }
+  .demo-lang-select {
+    margin-left: auto; font-family: var(--font-mono); font-size: 12px;
+    padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--paper); color: var(--ink-soft);
+  }
+
+  .demo-textarea {
+    width: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; font-family: var(--font-body); font-size: 14.5px;
+    background: var(--paper); color: var(--ink);
+  }
+  .demo-textarea:focus-visible { outline: 2px solid var(--river); outline-offset: 1px; }
+
+  .demo-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+  .wire-badge.warn { background: var(--coral-soft); color: var(--coral); }
+  .wire-badge.good { background: var(--forest-soft); color: var(--forest); }
+
+  .demo-submit-btn {
+    font-family: var(--font-mono); font-size: 13px; padding: 8px 18px; border-radius: 7px;
+    border: none; background: var(--forest); color: var(--paper-raised); cursor: pointer; font-weight: 600;
+  }
+  .demo-submit-btn:hover { filter: brightness(1.08); }
+  .demo-submit-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .demo-submit-btn:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+
+  .demo-checklist { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .demo-check-item {
+    display: flex; align-items: center; gap: 6px; font-family: var(--font-mono);
+    font-size: 11.5px; color: var(--ink-faint); padding: 5px 9px; border-radius: 20px; border: 1px solid var(--line);
+  }
+  .demo-check-item .dot-indicator { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+  .demo-check-item.on { color: var(--forest); border-color: var(--forest-soft); background: var(--forest-soft); }
+  .demo-check-item.on .dot-indicator { background: var(--forest); }
+
+  .wire-robby.state-good { background: var(--forest-soft); }
+  .wire-robby.state-warn { background: var(--coral-soft); }
+
+  .demo-garden-visual { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: var(--paper); }
+  .demo-river-label {
+    font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  }
+  #demo-river-meter > span { transition: width .4s ease, background .4s ease; }
+  #demo-river-meter.dirty > span { background: var(--coral); }
+  .tree { transition: transform .4s ease; }
+
+  .demo-reset-btn {
+    font-family: var(--font-mono); font-size: 11px; padding: 4px 9px; border-radius: 6px;
+    border: 1px dashed var(--line); background: transparent; color: var(--ink-faint); cursor: pointer;
+  }
+  .demo-reset-btn:hover { color: var(--coral); border-color: var(--coral); }
+
+  .demo-log {
+    margin-top: 14px; max-height: 190px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .demo-log-empty { color: var(--ink-faint); font-size: 12.5px; font-family: var(--font-mono); }
+  .demo-log-item {
+    font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft);
+    border-bottom: 1px dashed var(--line); padding-bottom: 6px; font-variant-numeric: tabular-nums;
+  }
+  .demo-log-item.good { color: var(--forest); }
+  .demo-log-item.warn { color: var(--coral); }
+
+  .demo-disclaimer {
+    margin-top: 14px; font-size: 12px; color: var(--ink-faint); max-width: 74ch;
+  }
+</style>
+
+<header class="masthead">
+  <div class="eyebrow"><span class="drop"></span>ürün mimarisi &amp; ux dosyası</div>
+  <h1 class="title">EcoPrompt / EcoAI Vienna</h1>
+  <p class="subtitle">10–14 yaş öğrencileri için, gerçek yapay zeka kullanımını Wienerwald &amp; Donau temalı bir dijital bahçeye bağlayan tarayıcı eklentisi + SaaS sistemi. Aşağıda sistem mimarisi, tel kafes akışı, çalışan ROCKS analiz motoru ve çok dilli mikro metinler yer alıyor.</p>
+  <div class="chips">
+    <span class="chip">Hedef: 10–14 yaş, Viyana okulları</span>
+    <span class="chip">Platform: Chrome/Edge Extension + SaaS</span>
+    <span class="chip">İlke: analiz cihazda, PII sunucuya gitmez</span>
+    <span class="chip">Aşağıdaki demo: gerçek AI bağlantısı yok, sadece analiz motoru</span>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc">
+    <div class="toc-title">İçindekiler</div>
+    <a href="#demo">0 · Canlı Demo</a>
+    <a href="#mimari">1 · Sistem Mimarisi</a>
+    <a href="#telkafes">2 · Arayüz Tel Kafesi</a>
+    <a href="#kod">3 · ROCKS Analiz Motoru</a>
+    <a href="#mikrometin">4 · Mikro Metinler &amp; Diller</a>
+  </nav>
+
+  <main>
+    <section id="demo">
+      <div class="kicker">Canlı Demo</div>
+      <h2>ROCKS Analiz Motorunu Dene</h2>
+      <p class="lead">Aşağıya bir prompt yaz — ya da örnek butonlarını kullan. Su tüketimi, ROCKS kontrol listesi ve Robby'nin tepkisi anında güncellenir. "Gönder"e basınca sonuç sağdaki bahçeye işlenir.</p>
+
+      <div class="demo-panel">
+        <div class="demo-col">
+          <div class="demo-examples">
+            <button type="button" class="demo-ex-btn" data-example="weak">Zayıf örnek</button>
+            <button type="button" class="demo-ex-btn" data-example="strong">Güçlü (ROCKS) örnek</button>
+            <select id="demo-lang" class="demo-lang-select" aria-label="Robby dili">
+              <option value="tr">Robby: TR</option>
+              <option value="de">Robby: DE</option>
+              <option value="en">Robby: EN</option>
+            </select>
+          </div>
+          <textarea id="demo-prompt" class="demo-textarea" rows="4" placeholder="Örn: Bana ödev yap"></textarea>
+          <div class="demo-actions">
+            <span id="demo-water-badge" class="wire-badge">💧 30 ml</span>
+            <button type="button" id="demo-submit" class="demo-submit-btn" disabled>Gönder</button>
+          </div>
+
+          <div class="demo-checklist" id="demo-checklist">
+            <div class="demo-check-item" data-key="role"><span class="dot-indicator"></span>Role</div>
+            <div class="demo-check-item" data-key="objective"><span class="dot-indicator"></span>Objective</div>
+            <div class="demo-check-item" data-key="context"><span class="dot-indicator"></span>Context</div>
+            <div class="demo-check-item" data-key="knowledge"><span class="dot-indicator"></span>Knowledge</div>
+            <div class="demo-check-item" data-key="style"><span class="dot-indicator"></span>Style</div>
+          </div>
+
+          <div class="wire-robby" id="demo-robby-msg">Robby: "Yazmaya başla, seni izliyorum 👀"</div>
+        </div>
+
+        <div class="demo-col">
+          <div class="demo-garden-visual">
+            <div class="demo-river-label"><span>Donau berraklığı</span><span id="demo-clarity-value">70%</span></div>
+            <div class="meter" id="demo-river-meter"><span style="width:70%"></span></div>
+            <div class="tree-row" id="demo-tree-row">
+              <div class="tree"><div class="canopy"></div><div class="trunk"></div></div>
+            </div>
+            <div class="stat-row">
+              <span id="demo-coin-value">0 Eco-Coin</span>
+              <button type="button" id="demo-reset" class="demo-reset-btn">Sıfırla</button>
+            </div>
+          </div>
+          <div class="demo-log" id="demo-log">
+            <div class="demo-log-empty">Henüz prompt gönderilmedi.</div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-disclaimer">Bu demo, aşağıdaki Bölüm B'deki <code>analyzePromptROCKS()</code> fonksiyonunun tarayıcıda çalışan aynısını kullanır — hiçbir yazdığın metin bu sayfadan dışarı gönderilmez.</p>
+    </section>
+
+    <section id="mimari">
+      <div class="kicker">Bölüm A · 1/2</div>
+      <h2>Sistem Mimarisi</h2>
+      <p class="lead">Sistemin can alıcı noktası şu: ROCKS analizi <strong>kullanıcının cihazında</strong> çalışır. Çocuğun ChatGPT/Gemini'ye yazdığı gerçek prompt hiçbir zaman EcoPrompt sunucusuna gönderilmez — sadece analizin <em>sonucu</em> (kaç ml su, hangi ROCKS bileşeni eksik, kaç Eco-Coin) anonim bir metrik olarak yukarı akar. Bu hem 10–14 yaş grubu için DSGVO/GDPR uyumluluğunu kolaylaştırır hem de okulların "çocuğumun promptları nereye gidiyor" sorusuna net bir cevap verir.</p>
+
+      <h3>İstemci katmanı — tarayıcı eklentisi</h3>
+      <p>Manifest V3 content script, <code>chatgpt.com</code>, <code>gemini.google.com</code>, <code>claude.ai</code> gibi izin verilen alan adlarına enjekte edilir. Prompt kutusundaki <em>submit</em> olayını (Enter tuşu / gönder butonu) yakalar, metni gönderim <strong>öncesinde</strong> okur, yerel olarak ROCKS analizini çalıştırır ve Shadow DOM içinde Robby'nin kartını gösterir — böylece EcoPrompt'un stilleri ChatGPT'nin arayüzüyle çakışmaz.</p>
+
+      <div class="flow">
+        <div class="flow-node"><div class="fn-label">01</div><div class="fn-name">Tarayıcı sekmesi</div><div class="fn-desc">Çocuk chatgpt.com'da yazıyor</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node accent-forest"><div class="fn-label">02</div><div class="fn-name">Content script</div><div class="fn-desc">Submit öncesi metni yakalar</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node accent-forest"><div class="fn-label">03</div><div class="fn-name">Yerel ROCKS analizi</div><div class="fn-desc">analyzePromptROCKS() — cihazda, offline çalışır</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node"><div class="fn-label">04</div><div class="fn-name">Robby overlay</div><div class="fn-desc">Shadow DOM kart: ml + öneri</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node accent-river"><div class="fn-label">05</div><div class="fn-name">Anonim metrik</div><div class="fn-desc">{schoolId, waterMl, ecoCoins} — prompt metni yok</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node accent-gold"><div class="fn-label">06</div><div class="fn-name">Garden + Lig servisleri</div><div class="fn-desc">Bahçe durumu, Bezirk sıralaması güncellenir</div></div>
+      </div>
+
+      <h3>İki entegrasyon modu</h3>
+      <div class="mode-grid">
+        <div class="mode-card">
+          <h4>Mod 1 — Eklenti (pasif gözlem)</h4>
+          <p>Çocuğun zaten kullandığı kişisel ChatGPT/Gemini hesabına dokunmadan, sadece tarayıcıdaki metni okur. API anahtarı gerekmez, kurulumu tek tıkla yapılır. 13–14 yaş grubu için uygun; okul dışı kullanımı da kapsar.</p>
+        </div>
+        <div class="mode-card">
+          <h4>Mod 2 — Okul API vekili (proxy)</h4>
+          <p>Okulun sağladığı OpenAI/Gemini anahtarı EcoPrompt ara katmanından geçer. Bu modda zayıf bir prompt <em>gönderilmeden önce</em> Robby "önce düzeltelim mi?" diye sorabilir — 10–11 yaş için daha korumalı bir "eğitim tekerlekleri" deneyimi.</p>
+        </div>
+      </div>
+
+      <h3>Backend servisleri</h3>
+      <ul class="plain">
+        <li><strong>Auth</strong> — okul tarafından yönetilen takma ad hesapları; 16 yaş altı için veli onay akışı (DSGVO Md. 8 mantığı), gerçek isim/e-posta zorunlu değil.</li>
+        <li><strong>Ingest API</strong> — anonim metrik olaylarını doğrular, kullanıcı başına hız sınırı koyar (aynı prompt'u art arda göndererek Eco-Coin "farm" etmeyi engeller).</li>
+        <li><strong>Garden State Service</strong> — her olay bir event log kaydıdır; bahçe durumu (ağaç büyümesi, nehir berraklığı, coin bakiyesi) bu log'un indirgenmiş görünümüdür — bu sayede "neden nehrim kirlendi" sorusu her zaman geri izlenebilir.</li>
+        <li><strong>Leaderboard Service</strong> — okul/Bezirk bazında haftalık materialized view; near-real-time güncellenir, her Pazartesi sıfırlanır.</li>
+        <li><strong>Robby Content Service</strong> — ROCKS eksik bileşeni → lokalize mascot repliği eşlemesi; öğretmen panelinden mesaj tonu ayarlanabilir.</li>
+      </ul>
+
+      <div class="callout warn">
+        <strong>Gizlilik notu —</strong> Prompt metninin kendisi hiçbir zaman ağ isteğine dahil edilmez; yalnızca sayısal analiz sonucu senkronize edilir. Bu, hem çocuk verisi koruması hem de okulların yapay zeka sağlayıcılarıyla (OpenAI, Google) olan kullanım şartları çakışmalarını en aza indirir.
+      </div>
+    </section>
+
+    <section id="telkafes">
+      <div class="kicker">Bölüm A · 2/2</div>
+      <h2>Arayüz Tel Kafesi</h2>
+      <p class="lead">10–14 yaş için tasarım kuralı: büyük dokunma alanları, tek ekranda tek fikir, metin yerine renk/ikon önceliği. Aşağıdaki dört ekran sistemin omurgasını oluşturuyor.</p>
+
+      <div class="wire-grid">
+        <div class="wire-frame">
+          <div class="wire-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="wire-title">chatgpt.com — canlı overlay</span></div>
+          <div class="wire-body">
+            <div class="wire-box">[ ChatGPT prompt kutusu — orijinal arayüz ]</div>
+            <div class="wire-robby">
+              <span class="wire-badge">💧 30 ml</span>
+              <div style="margin-top:8px;">"Rol ve Bağlam eksik! Robby ile ROCKS'a göre düzeltelim mi?" <strong>[Düzelt] [Yine de gönder]</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wire-frame">
+          <div class="wire-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="wire-title">Robby koçluk kartı — genişletilmiş</span></div>
+          <div class="wire-body">
+            <div class="wire-box">R O C K S — adım adım doldur</div>
+            <div class="stat-row"><span>Role</span><span>✗</span></div>
+            <div class="stat-row"><span>Objective</span><span>✓</span></div>
+            <div class="stat-row"><span>Context</span><span>✗</span></div>
+            <div class="stat-row"><span>Knowledge</span><span>✓</span></div>
+            <div class="stat-row"><span>Style</span><span>✗</span></div>
+            <div class="wire-robby">"2/5 tamam! Bir 'Sen bir ... gibisin' cümlesiyle başla." <strong>[Örnek göster]</strong></div>
+          </div>
+        </div>
+
+        <div class="wire-frame">
+          <div class="wire-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="wire-title">My Digital Garden — ana ekran</span></div>
+          <div class="wire-body">
+            <div class="wire-box" style="text-align:center; padding:18px;">
+              🌲🌳🌲 Wienerwald<br>
+              <span style="font-size:16px;">〜〜〜 Donau 〜〜〜</span>
+            </div>
+            <div class="tree-row">
+              <div class="tree"><div class="canopy"></div><div class="trunk"></div></div>
+              <div class="tree small"><div class="canopy"></div><div class="trunk"></div></div>
+              <div class="tree"><div class="canopy"></div><div class="trunk"></div></div>
+            </div>
+            <div>Nehir berraklığı</div>
+            <div class="meter"><span style="width:72%"></span></div>
+            <div class="stat-row"><span>128 Eco-Coin</span><span>Bugün: −40 ml tasarruf</span></div>
+          </div>
+        </div>
+
+        <div class="wire-frame">
+          <div class="wire-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="wire-title">Green AI Leaderboard — Bezirk ligi</span></div>
+          <div class="wire-body">
+            <div class="wire-box">Bu hafta kalan: 3 gün 4 saat</div>
+            <div class="district-list">
+              <div class="district-row"><span>1. Meidling</span><div class="bar"><span style="width:92%"></span></div><span class="amount">500 L</span></div>
+              <div class="district-row"><span>2. Favoriten</span><div class="bar"><span style="width:78%"></span></div><span class="amount">410 L</span></div>
+              <div class="district-row"><span>3. Ottakring</span><div class="bar"><span style="width:55%"></span></div><span class="amount">290 L</span></div>
+              <div class="district-row"><span>4. Döbling</span><div class="bar"><span style="width:31%"></span></div><span class="amount">160 L</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Tasarım kuralları</h3>
+      <ul class="plain">
+        <li><strong>Utanç değil, koçluk</strong> — Robby hiçbir zaman "yanlış yaptın" demez; her uyarı bir sonraki adımı gösterir.</li>
+        <li><strong>Renk = anlam</strong> — mavi/yeşil = sağlıklı nehir &amp; orman, turuncu/kahve = kirlenme; metne bağımlı kalmadan durum anında okunur.</li>
+        <li><strong>Tek elle kullanım</strong> — overlay kartı ekranın alt/yan köşesinde sabit, ana içeriği kapatmaz.</li>
+        <li><strong>Dil ikonu değil metin etiketi</strong> — DE/EN/TR gibi dil seçiciler bayrak yerine metin rozeti kullanır (BCS gibi birden fazla ülkeyi kapsayan dil paketlerinde bayrak seçimi siyasi bir soruna dönüşebilir).</li>
+      </ul>
+    </section>
+
+    <section id="kod">
+      <div class="kicker">Bölüm B</div>
+      <h2>ROCKS Analiz Motoru</h2>
+      <p class="lead">Aşağıdaki fonksiyon saf JavaScript'tir (React içinde de kullanılabilir), harici bir NLP servisi çağırmaz — anahtar kelime eşleşmesi (substring) ve iki basit regex'e (rakam, tırnak içi metin) dayanır, bu yüzden cihazda offline çalışabilir. <code>\b</code> regex kelime sınırı kullanmadık: JavaScript'te <code>\b</code> yalnızca ASCII harflerini "kelime karakteri" sayar, bu yüzden çünkü/için/öğretmen gibi ç/ü/ş/ö içeren kelimelerde sessizce eşleşmeyi kaçırır — bu yüzden düz <code>includes()</code> daha güvenilir. Beş ROCKS bileşeninden her biri için üç dilde (TR/DE/EN) kelime listesi tutulur; eşleşen bileşen sayısı arttıkça su tüketimi 30ml'den 10ml'ye düşer (bileşen başına 4ml). Sayfanın en üstündeki <a href="#demo">Canlı Demo</a> tam olarak bu kodu çalıştırıyor.</p>
+
+      <div class="code-card">
+        <div class="code-bar"><span>rocksAnalyzer.js</span><span class="lang">JavaScript</span></div>
+        <div class="code-scroll"><pre>const ROLE_KEYWORDS = {
+  en: ["as a", "as an", "act as", "you are a", "you are an", "acting as", "imagine you are"],
+  de: ["du bist ein", "du bist eine", "als ein ", "als eine ", "in der rolle", "übernimm die rolle"],
+  tr: ["sen bir", "senin rolün", "gibi davran", "rolünde"],
+};
+
+const OBJECTIVE_KEYWORDS = {
+  en: ["write", "explain", "summarize", "create", "list", "compare", "translate", "solve", "design"],
+  de: ["schreibe", "erkläre", "fasse zusammen", "erstelle", "liste", "vergleiche", "übersetze", "löse"],
+  tr: ["yaz", "açıkla", "özetle", "oluştur", "listele", "karşılaştır", "çevir", "çöz"],
+};
+
+const CONTEXT_KEYWORDS = {
+  en: ["because", "for my", "for a", "since", "given that", "so that", "grade", "years old"],
+  de: ["weil", "für mein", "für meine", "damit", "da ich", "klasse", "jahre alt"],
+  tr: ["çünkü", "için", "dolayı", "nedeniyle", "sınıf", "yaşında"],
+};
+
+const KNOWLEDGE_KEYWORDS = {
+  en: ["about", "topic"],
+  de: ["thema", "konu"],
+  tr: ["hakkında", "konusunda"],
+};
+const KNOWLEDGE_PATTERNS = [/"[^"]{3,}"/, /\d{1,4}/];
+
+const STYLE_KEYWORDS = {
+  en: ["bullet points", "as a list", "short", "briefly", "simple language"],
+  de: ["stichpunkten", "kurz", "einfach erklärt", "kindgerecht"],
+  tr: ["madde madde", "kısaca", "basit bir dille", "kolay bir dille"],
+};
+
+const WATER_ML_MAX = 30;
+const WATER_ML_MIN = 10;
+const COMPONENT_COUNT = 5;
+const ML_PER_COMPONENT = (WATER_ML_MAX - WATER_ML_MIN) / COMPONENT_COUNT;
+
+function containsAny(text, keywordsByLang) {
+  const lower = text.toLowerCase();
+  return Object.values(keywordsByLang).some((list) => list.some((kw) => lower.includes(kw)));
+}
+
+export function analyzePromptROCKS(promptText) {
+  const text = (promptText || "").trim();
+
+  const matched = {
+    role: containsAny(text, ROLE_KEYWORDS),
+    objective: containsAny(text, OBJECTIVE_KEYWORDS),
+    context: containsAny(text, CONTEXT_KEYWORDS),
+    knowledge: containsAny(text, KNOWLEDGE_KEYWORDS) || KNOWLEDGE_PATTERNS.some((p) => p.test(text)),
+    style: containsAny(text, STYLE_KEYWORDS),
+  };
+
+  const score = Object.values(matched).filter(Boolean).length;
+  const waterMl = Math.max(WATER_ML_MIN, WATER_ML_MAX - score * ML_PER_COMPONENT);
+  const ecoCoins = Math.round((WATER_ML_MAX - waterMl) / 2);
+  const missing = Object.keys(matched).filter((key) => !matched[key]);
+
+  return { score, matched, waterMl, ecoCoins, missing };
+}
+
+export function applyGardenImpact(garden, analysis) {
+  const isHealthy = analysis.score >= 4;
+  const clarityDelta = isHealthy ? 3 : -5;
+  const growthDelta = isHealthy ? 1 : 0;
+
+  return {
+    ...garden,
+    riverClarity: Math.min(100, Math.max(0, garden.riverClarity + clarityDelta)),
+    treeGrowth: Math.min(100, garden.treeGrowth + growthDelta),
+    ecoCoins: garden.ecoCoins + analysis.ecoCoins,
+  };
+}</pre></div>
+      </div>
+
+      <h3>Robby'nin geri bildirim metni (eksik bileşene göre)</h3>
+      <div class="code-card">
+        <div class="code-bar"><span>robbyFeedback.js</span><span class="lang">JavaScript</span></div>
+        <div class="code-scroll"><pre>const ROBBY_MESSAGES = {
+  tr: {
+    role: "Robby'nin bir ROLÜ yok! 'Sen bir tarih öğretmenisin' gibi bir cümleyle başla.",
+    objective: "AMAÇ belirsiz. Net bir fiil kullan: yaz, açıkla, özetle...",
+    context: "BAĞLAM eksik. Bunu neden istediğini ya da kim için olduğunu ekle.",
+    knowledge: "BİLGİ eksik. Konuyla ilgili somut bir detay veya sayı ver.",
+    style: "STİL belirsiz. Cevap kısa mı olsun, madde madde mi?",
+  },
+  de: {
+    role: "Robby vermisst eine ROLLE! Zum Beispiel: 'Du bist ein Geschichtslehrer'.",
+    objective: "Das ZIEL ist unklar. Nutze ein klares Verb: schreibe, erkläre, fasse zusammen...",
+    context: "Der KONTEXT fehlt. Sag, wofür oder für wen du das brauchst.",
+    knowledge: "Das WISSEN fehlt. Gib ein konkretes Detail oder eine Zahl dazu.",
+    style: "Der STIL ist offen. Kurz? In Stichpunkten?",
+  },
+  en: {
+    role: "Robby can't find a ROLE! Try: 'You are a history teacher'.",
+    objective: "The OBJECTIVE is fuzzy. Use a clear verb: write, explain, summarize...",
+    context: "CONTEXT is missing. Say why you need this or who it's for.",
+    knowledge: "KNOWLEDGE is missing. Add one concrete detail or number.",
+    style: "STYLE is open. Short? Bullet points?",
+  },
+};
+
+export function getRobbyFeedback(missing, lang = "tr") {
+  if (missing.length === 0) return null;
+  const dict = ROBBY_MESSAGES[lang] || ROBBY_MESSAGES.tr;
+  return missing.map((key) => dict[key]);
+}</pre></div>
+      </div>
+
+      <h3>React'a bağlama</h3>
+      <div class="code-card">
+        <div class="code-bar"><span>RobbyOverlay.jsx</span><span class="lang">React</span></div>
+        <div class="code-scroll"><pre>function useRocksWaterMeter(promptText, lang) {
+  return useMemo(() =&gt; {
+    const analysis = analyzePromptROCKS(promptText);
+    const feedback = getRobbyFeedback(analysis.missing, lang);
+    return { ...analysis, feedback };
+  }, [promptText, lang]);
+}
+
+function RobbyOverlay({ promptText, lang = "tr" }) {
+  const { waterMl, score, feedback, ecoCoins } = useRocksWaterMeter(promptText, lang);
+  const isHealthy = score &gt;= 4;
+
+  if (!promptText) return null;
+
+  return (
+    &lt;div className={`robby-card ${isHealthy ? "robby-good" : "robby-warn"}`}&gt;
+      &lt;strong&gt;{waterMl} ml&lt;/strong&gt; su harcanacak
+      {!isHealthy &amp;&amp; feedback &amp;&amp; (
+        &lt;ul&gt;
+          {feedback.slice(0, 2).map((line) =&gt; (
+            &lt;li key={line}&gt;{line}&lt;/li&gt;
+          ))}
+        &lt;/ul&gt;
+      )}
+      {isHealthy &amp;&amp; &lt;span&gt;+{ecoCoins} Eco-Coin kazandın! 🌳&lt;/span&gt;}
+    &lt;/div&gt;
+  );
+}</pre></div>
+      </div>
+
+      <div class="callout">
+        <strong>Genişletme notu —</strong> <code>applyGardenImpact()</code>, Modül 1'in çıktısını doğrudan Modül 2'nin (My Digital Garden) durum güncellemesine bağlar: her prompt olayı hem su sayacını hem nehir/ağaç durumunu tek bir çağrıda günceller, ayrı bir senkronizasyon adımına gerek kalmaz.
+      </div>
+    </section>
+
+    <section id="mikrometin">
+      <div class="kicker">Bölüm C</div>
+      <h2>Mikro Metinler &amp; Dil Seçenekleri</h2>
+      <p class="lead">Viyana okulları için önerilen dil paketi: <strong>Almanca</strong> (resmi eğitim dili), <strong>İngilizce</strong> (uluslararası okullar) ve <strong>Türkçe</strong> (Viyana'daki en büyük göçmen topluluklarından biri) MVP kapsamında tam çevrilir. Boşnakça/Sırpça/Hırvatça (BCS) ve Arapça, aynı i18n anahtar yapısıyla ikinci fazda eklenebilecek şekilde tasarlanmıştır.</p>
+
+      <div class="lang-tabs" role="tablist" aria-label="Mikro metin dili">
+        <button class="lang-tab active" data-lang="tr" role="tab" aria-selected="true">TR</button>
+        <button class="lang-tab" data-lang="de" role="tab" aria-selected="false">DE</button>
+        <button class="lang-tab" data-lang="en" role="tab" aria-selected="false">EN</button>
+      </div>
+
+      <div class="copy-table-wrap">
+        <table class="copy-table">
+          <thead><tr><th style="width:26%">Anahtar</th><th>Metin</th></tr></thead>
+          <tbody id="copy-tr" class="copy-panel">
+            <tr><td class="key">onboarding.welcome</td><td class="text">"Merhaba! Ben Robby ROCKS 🪨 Wienerwald'ın bekçisiyim. Yapay zekaya her soru sorduğunda gerçek su ve enerji harcanıyor — birlikte tasarruf edelim mi?"</td></tr>
+            <tr><td class="key">warning.weak (30ml)</td><td class="text">"Hop! Bu promptta Rol ve Bağlam eksikti, yapay zeka fazla düşünmek zorunda kaldı: 30ml su gitti. Donau'muzun rengi biraz bulanıklaştı 💧"</td></tr>
+            <tr><td class="key">success.strong (10ml)</td><td class="text">"Harika prompt! Sadece 10ml su harcandı. Wienerwald'daki fidanın büyüyor 🌱 +4 Eco-Coin kazandın!"</td></tr>
+            <tr><td class="key">reward.ecoCoin</td><td class="text">"+4 Eco-Coin! Cüzdanın doluyor — yeni bir ağaç türü açman için 20 coin lazım."</td></tr>
+            <tr><td class="key">garden.river.polluted</td><td class="text">"Donau'muz bugün biraz hasta görünüyor 😟 Son 5 promptundan 4'ü ROCKS'suzdu. Bir düzeltelim mi?"</td></tr>
+            <tr><td class="key">league.weekly.announcement</td><td class="text">"📢 Bu hafta Meidling Bölgesi Okulları 500 litre su tasarrufu sağladı! Sıradaki hedef: Favoriten'i geçmek 🏆"</td></tr>
+            <tr><td class="key">notify.parentWeekly</td><td class="text">"Haftalık özet: [Öğrenci adı] bu hafta 15 ROCKS uyumlu prompt yazdı ve 280ml su tasarrufu sağladı."</td></tr>
+            <tr><td class="key">streak.encourage</td><td class="text">"3 gündür serin devam ediyor! Bugün bir ROCKS promptu daha yazarsan Stephansdom rozetini kazanırsın 🔔"</td></tr>
+            <tr><td class="key">state.offline</td><td class="text">"Robby şu an bağlantıyı kaybetti 🔌 Promptların yerelde kaydedildi, internet gelince senkronlanacak."</td></tr>
+          </tbody>
+          <tbody id="copy-de" class="copy-panel" hidden>
+            <tr><td class="key">onboarding.welcome</td><td class="text">„Servus! Ich bin Robby ROCKS, der Wächter des Wienerwalds. Jede Frage an die KI kostet echtes Wasser und Energie — sparen wir gemeinsam?“</td></tr>
+            <tr><td class="key">warning.weak (30ml)</td><td class="text">„Huch! Da haben Rolle und Kontext gefehlt, die KI musste extra grübeln: 30ml Wasser weg. Die Donau wird ein bisschen trüb 💧“</td></tr>
+            <tr><td class="key">success.strong (10ml)</td><td class="text">„Super Prompt! Nur 10ml Wasser verbraucht. Dein Bäumchen im Wienerwald wächst 🌱 +4 Eco-Coins!“</td></tr>
+            <tr><td class="key">reward.ecoCoin</td><td class="text">„+4 Eco-Coins! Dein Beutel füllt sich — für einen neuen Baumtyp brauchst du 20 Coins.“</td></tr>
+            <tr><td class="key">garden.river.polluted</td><td class="text">„Unsere Donau sieht heute etwas krank aus 😟 4 von deinen letzten 5 Prompts waren ohne ROCKS. Sollen wir das ausbessern?“</td></tr>
+            <tr><td class="key">league.weekly.announcement</td><td class="text">„📢 Diese Woche haben die Schulen im Bezirk Meidling 500 Liter Wasser gespart! Nächstes Ziel: Favoriten überholen 🏆“</td></tr>
+            <tr><td class="key">notify.parentWeekly</td><td class="text">„Wochenzusammenfassung: [Schülername] hat diese Woche 15 ROCKS-konforme Prompts geschrieben und 280ml Wasser gespart.“</td></tr>
+            <tr><td class="key">streak.encourage</td><td class="text">„3 Tage Serie am Laufen! Schreib heute noch einen ROCKS-Prompt und hol dir das Stephansdom-Abzeichen 🔔“</td></tr>
+            <tr><td class="key">state.offline</td><td class="text">„Robby hat gerade die Verbindung verloren 🔌 Deine Prompts sind lokal gespeichert und werden synchronisiert, sobald du wieder online bist.“</td></tr>
+          </tbody>
+          <tbody id="copy-en" class="copy-panel" hidden>
+            <tr><td class="key">onboarding.welcome</td><td class="text">"Hi, I'm Robby ROCKS, guardian of the Vienna Woods! Every question you ask an AI uses real water and energy — want to save some together?"</td></tr>
+            <tr><td class="key">warning.weak (30ml)</td><td class="text">"Oops! That prompt was missing Role and Context, so the AI had to work extra hard: 30ml of water gone. The Danube just got a little cloudier 💧"</td></tr>
+            <tr><td class="key">success.strong (10ml)</td><td class="text">"Great prompt! Only 10ml of water used. Your sapling in the Vienna Woods just grew 🌱 +4 Eco-Coins!"</td></tr>
+            <tr><td class="key">reward.ecoCoin</td><td class="text">"+4 Eco-Coins! Your pouch is filling up — 20 coins unlock a new tree type."</td></tr>
+            <tr><td class="key">garden.river.polluted</td><td class="text">"Our Danube looks a bit unwell today 😟 4 of your last 5 prompts skipped ROCKS. Want to fix that together?"</td></tr>
+            <tr><td class="key">league.weekly.announcement</td><td class="text">"📢 This week, Meidling district schools saved 500 liters of water! Next goal: overtake Favoriten 🏆"</td></tr>
+            <tr><td class="key">notify.parentWeekly</td><td class="text">"Weekly summary: [Student name] wrote 15 ROCKS-aligned prompts this week and saved 280ml of water."</td></tr>
+            <tr><td class="key">streak.encourage</td><td class="text">"3-day streak going! Write one more ROCKS prompt today to unlock the Stephansdom badge 🔔"</td></tr>
+            <tr><td class="key">state.offline</td><td class="text">"Robby just lost connection 🔌 Your prompts are saved locally and will sync once you're back online."</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="lang-pack-note">
+        <span class="pack">faz 2 → bs / hr / sr (ortak paket)</span>
+        <span class="pack">faz 2 → ar</span>
+        <span class="pack">yapı: i18n.[dil].[modül].[anahtar]</span>
+      </div>
+
+      <h3>i18n anahtar yapısı (mühendislik teslimi)</h3>
+      <div class="code-card">
+        <div class="code-bar"><span>copy.i18n.json</span><span class="lang">JSON</span></div>
+        <div class="code-scroll"><pre>{
+  "tr": {
+    "robby.onboarding.welcome": "Merhaba! Ben Robby ROCKS...",
+    "robby.warning.weak": "Hop! Bu promptta Rol ve Bağlam eksikti...",
+    "garden.river.polluted": "Donau'muz bugün biraz hasta görünüyor..."
+  },
+  "de": {
+    "robby.onboarding.welcome": "Servus! Ich bin Robby ROCKS...",
+    "robby.warning.weak": "Huch! Da haben Rolle und Kontext gefehlt...",
+    "garden.river.polluted": "Unsere Donau sieht heute etwas krank aus..."
+  },
+  "en": {
+    "robby.onboarding.welcome": "Hi, I'm Robby ROCKS...",
+    "robby.warning.weak": "Oops! That prompt was missing Role and Context...",
+    "garden.river.polluted": "Our Danube looks a bit unwell today..."
+  }
+}</pre></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>EcoPrompt / EcoAI Vienna — mimari &amp; UX taslağı</footer>
+
+<script>
+  (function () {
+    var tabs = document.querySelectorAll(".lang-tab");
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var lang = tab.getAttribute("data-lang");
+        tabs.forEach(function (t) {
+          t.classList.toggle("active", t === tab);
+          t.setAttribute("aria-selected", t === tab ? "true" : "false");
+        });
+        document.querySelectorAll(".copy-panel").forEach(function (panel) {
+          panel.hidden = panel.id !== "copy-" + lang;
+        });
+      });
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    var ROLE_KEYWORDS = {
+      en: ["as a", "as an", "act as", "you are a", "you are an", "acting as", "imagine you are"],
+      de: ["du bist ein", "du bist eine", "als ein ", "als eine ", "in der rolle", "übernimm die rolle"],
+      tr: ["sen bir", "senin rolün", "gibi davran", "rolünde"],
+    };
+    var OBJECTIVE_KEYWORDS = {
+      en: ["write", "explain", "summarize", "create", "list", "compare", "translate", "solve", "design"],
+      de: ["schreibe", "erkläre", "fasse zusammen", "erstelle", "liste", "vergleiche", "übersetze", "löse"],
+      tr: ["yaz", "açıkla", "özetle", "oluştur", "listele", "karşılaştır", "çevir", "çöz"],
+    };
+    var CONTEXT_KEYWORDS = {
+      en: ["because", "for my", "for a", "since", "given that", "so that", "grade", "years old"],
+      de: ["weil", "für mein", "für meine", "damit", "da ich", "klasse", "jahre alt"],
+      tr: ["çünkü", "için", "dolayı", "nedeniyle", "sınıf", "yaşında"],
+    };
+    var KNOWLEDGE_KEYWORDS = {
+      en: ["about", "topic"],
+      de: ["thema", "konu"],
+      tr: ["hakkında", "konusunda"],
+    };
+    var KNOWLEDGE_PATTERNS = [/"[^"]{3,}"/, /\d{1,4}/];
+    var STYLE_KEYWORDS = {
+      en: ["bullet points", "as a list", "short", "briefly", "simple language"],
+      de: ["stichpunkten", "kurz", "einfach erklärt", "kindgerecht"],
+      tr: ["madde madde", "kısaca", "basit bir dille", "kolay bir dille"],
+    };
+
+    var WATER_ML_MAX = 30;
+    var WATER_ML_MIN = 10;
+    var COMPONENT_COUNT = 5;
+    var ML_PER_COMPONENT = (WATER_ML_MAX - WATER_ML_MIN) / COMPONENT_COUNT;
+
+    function containsAny(text, keywordsByLang) {
+      var lower = text.toLowerCase();
+      return Object.keys(keywordsByLang).some(function (langKey) {
+        return keywordsByLang[langKey].some(function (kw) { return lower.indexOf(kw) !== -1; });
+      });
+    }
+
+    function analyzePromptROCKS(promptText) {
+      var text = (promptText || "").trim();
+      var matched = {
+        role: containsAny(text, ROLE_KEYWORDS),
+        objective: containsAny(text, OBJECTIVE_KEYWORDS),
+        context: containsAny(text, CONTEXT_KEYWORDS),
+        knowledge: containsAny(text, KNOWLEDGE_KEYWORDS) || KNOWLEDGE_PATTERNS.some(function (p) { return p.test(text); }),
+        style: containsAny(text, STYLE_KEYWORDS),
+      };
+      var score = Object.keys(matched).filter(function (k) { return matched[k]; }).length;
+      var waterMl = Math.max(WATER_ML_MIN, WATER_ML_MAX - score * ML_PER_COMPONENT);
+      var ecoCoins = Math.round((WATER_ML_MAX - waterMl) / 2);
+      var missing = Object.keys(matched).filter(function (k) { return !matched[k]; });
+      return { score: score, matched: matched, waterMl: waterMl, ecoCoins: ecoCoins, missing: missing };
+    }
+
+    function applyGardenImpact(garden, analysis) {
+      var isHealthy = analysis.score >= 4;
+      var clarityDelta = isHealthy ? 3 : -5;
+      var growthDelta = isHealthy ? 1 : 0;
+      return {
+        riverClarity: Math.min(100, Math.max(0, garden.riverClarity + clarityDelta)),
+        treeGrowth: Math.min(100, garden.treeGrowth + growthDelta),
+        ecoCoins: garden.ecoCoins + analysis.ecoCoins,
+        submissions: garden.submissions + 1,
+      };
+    }
+
+    var ROBBY_MESSAGES = {
+      tr: {
+        role: "Bir ROLÜN yok! 'Sen bir tarih öğretmenisin' gibi bir cümleyle başla.",
+        objective: "AMAÇ belirsiz. Net bir fiil kullan: yaz, açıkla, özetle...",
+        context: "BAĞLAM eksik. Bunu neden istediğini ya da kim için olduğunu ekle.",
+        knowledge: "BİLGİ eksik. Konuyla ilgili somut bir detay veya sayı ver.",
+        style: "STİL belirsiz. Cevap kısa mı olsun, madde madde mi?",
+        good: "Harika prompt! Su tüketimi minimumda, bahçen büyüyor 🌱",
+        empty: "Yazmaya başla, seni izliyorum 👀",
+      },
+      de: {
+        role: "Dir fehlt eine ROLLE! Zum Beispiel: 'Du bist ein Geschichtslehrer'.",
+        objective: "Das ZIEL ist unklar. Nutze ein klares Verb: schreibe, erkläre, fasse zusammen...",
+        context: "Der KONTEXT fehlt. Sag, wofür oder für wen du das brauchst.",
+        knowledge: "Das WISSEN fehlt. Gib ein konkretes Detail oder eine Zahl dazu.",
+        style: "Der STIL ist offen. Kurz? In Stichpunkten?",
+        good: "Super Prompt! Minimaler Wasserverbrauch, dein Garten wächst 🌱",
+        empty: "Schreib los, ich schau zu 👀",
+      },
+      en: {
+        role: "You're missing a ROLE! Try: 'You are a history teacher'.",
+        objective: "The OBJECTIVE is fuzzy. Use a clear verb: write, explain, summarize...",
+        context: "CONTEXT is missing. Say why you need this or who it's for.",
+        knowledge: "KNOWLEDGE is missing. Add one concrete detail or number.",
+        style: "STYLE is open. Short? Bullet points?",
+        good: "Great prompt! Minimal water used, your garden is growing 🌱",
+        empty: "Start typing, I'm watching 👀",
+      },
+    };
+
+    var EXAMPLES = {
+      weak: "Bana ödev yap",
+      strong: "Sen bir tarih öğretmenisin. 5. sınıf öğrencisi için, çünkü yarın sınavım var, Viyana'nın kuruluşu hakkında 100 kelimeyi geçmeyen, madde madde ve basit bir dille bir özet yaz.",
+    };
+
+    var lang = "tr";
+    var garden = { riverClarity: 70, treeGrowth: 0, ecoCoins: 0, submissions: 0 };
+
+    var els = {
+      textarea: document.getElementById("demo-prompt"),
+      waterBadge: document.getElementById("demo-water-badge"),
+      submitBtn: document.getElementById("demo-submit"),
+      resetBtn: document.getElementById("demo-reset"),
+      checklist: document.getElementById("demo-checklist"),
+      robbyMsg: document.getElementById("demo-robby-msg"),
+      langSelect: document.getElementById("demo-lang"),
+      clarityValue: document.getElementById("demo-clarity-value"),
+      riverMeter: document.getElementById("demo-river-meter"),
+      coinValue: document.getElementById("demo-coin-value"),
+      treeRow: document.getElementById("demo-tree-row"),
+      log: document.getElementById("demo-log"),
+    };
+
+    if (!els.textarea) return;
+
+    function renderLiveAnalysis() {
+      var text = els.textarea.value;
+      var analysis = analyzePromptROCKS(text);
+      var dict = ROBBY_MESSAGES[lang];
+
+      els.waterBadge.textContent = "💧 " + Math.round(analysis.waterMl) + " ml";
+      els.waterBadge.classList.toggle("good", text.trim().length > 0 && analysis.score >= 4);
+      els.waterBadge.classList.toggle("warn", text.trim().length > 0 && analysis.score < 4);
+
+      Object.keys(analysis.matched).forEach(function (key) {
+        var item = els.checklist.querySelector('[data-key="' + key + '"]');
+        if (item) item.classList.toggle("on", analysis.matched[key]);
+      });
+
+      if (!text.trim()) {
+        els.robbyMsg.textContent = 'Robby: "' + dict.empty + '"';
+        els.robbyMsg.className = "wire-robby";
+      } else if (analysis.score >= 4) {
+        els.robbyMsg.textContent = 'Robby: "' + dict.good + '"';
+        els.robbyMsg.className = "wire-robby state-good";
+      } else {
+        var firstMissing = analysis.missing[0];
+        els.robbyMsg.textContent = 'Robby: "' + dict[firstMissing] + '"';
+        els.robbyMsg.className = "wire-robby state-warn";
+      }
+
+      els.submitBtn.disabled = !text.trim();
+      return analysis;
+    }
+
+    function renderTrees() {
+      els.treeRow.innerHTML = "";
+      var mainScale = 0.6 + Math.min(garden.treeGrowth, 100) / 100 * 0.8;
+      var main = document.createElement("div");
+      main.className = "tree";
+      main.style.transform = "scale(" + mainScale.toFixed(2) + ")";
+      main.innerHTML = '<div class="canopy"></div><div class="trunk"></div>';
+      els.treeRow.appendChild(main);
+
+      var saplingCount = Math.min(6, Math.floor(garden.treeGrowth / 12));
+      for (var i = 0; i < saplingCount; i++) {
+        var sapling = document.createElement("div");
+        sapling.className = "tree small";
+        sapling.innerHTML = '<div class="canopy"></div><div class="trunk"></div>';
+        els.treeRow.appendChild(sapling);
+      }
+    }
+
+    function renderGarden() {
+      els.clarityValue.textContent = Math.round(garden.riverClarity) + "%";
+      els.riverMeter.querySelector("span").style.width = garden.riverClarity + "%";
+      els.riverMeter.classList.toggle("dirty", garden.riverClarity < 50);
+      els.coinValue.textContent = garden.ecoCoins + " Eco-Coin";
+      renderTrees();
+    }
+
+    function logSubmission(analysis) {
+      var emptyNote = els.log.querySelector(".demo-log-empty");
+      if (emptyNote) els.log.innerHTML = "";
+      var row = document.createElement("div");
+      row.className = "demo-log-item " + (analysis.score >= 4 ? "good" : "warn");
+      row.textContent = "#" + garden.submissions + " — " + Math.round(analysis.waterMl) + "ml · " + analysis.score + "/5 ROCKS · +" + analysis.ecoCoins + " coin";
+      els.log.insertBefore(row, els.log.firstChild);
+    }
+
+    function commitSubmission() {
+      var text = els.textarea.value;
+      if (!text.trim()) return;
+      var analysis = analyzePromptROCKS(text);
+      garden = applyGardenImpact(garden, analysis);
+      renderGarden();
+      logSubmission(analysis);
+      els.textarea.value = "";
+      renderLiveAnalysis();
+    }
+
+    function resetDemo() {
+      garden = { riverClarity: 70, treeGrowth: 0, ecoCoins: 0, submissions: 0 };
+      els.textarea.value = "";
+      els.log.innerHTML = '<div class="demo-log-empty">Henüz prompt gönderilmedi.</div>';
+      renderGarden();
+      renderLiveAnalysis();
+    }
+
+    els.textarea.addEventListener("input", renderLiveAnalysis);
+    els.submitBtn.addEventListener("click", commitSubmission);
+    els.resetBtn.addEventListener("click", resetDemo);
+    els.langSelect.addEventListener("change", function () {
+      lang = els.langSelect.value;
+      renderLiveAnalysis();
+    });
+    document.querySelectorAll(".demo-ex-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        els.textarea.value = EXAMPLES[btn.getAttribute("data-example")];
+        renderLiveAnalysis();
+        els.textarea.focus();
+      });
+    });
+
+    renderGarden();
+    renderLiveAnalysis();
+  })();
+</script>
