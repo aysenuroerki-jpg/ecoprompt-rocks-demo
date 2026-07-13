@@ -725,6 +725,7 @@
   de: ["du bist ein", "du bist eine", "als ein ", "als eine ", "in der rolle", "übernimm die rolle"],
   tr: ["sen bir", "senin rolün", "gibi davran", "rolünde"],
 };
+const ROLE_PATTERNS = [/\bsen\b(?:\s+\S+){0,3}\s+bir\b/i];
 
 const OBJECTIVE_KEYWORDS = {
   en: ["write", "explain", "summarize", "create", "list", "compare", "translate", "solve", "design"],
@@ -765,7 +766,7 @@ export function analyzePromptROCKS(promptText) {
   const text = (promptText || "").trim();
 
   const matched = {
-    role: containsAny(text, ROLE_KEYWORDS),
+    role: containsAny(text, ROLE_KEYWORDS) || ROLE_PATTERNS.some((p) => p.test(text)),
     objective: containsAny(text, OBJECTIVE_KEYWORDS),
     context: containsAny(text, CONTEXT_KEYWORDS),
     knowledge: containsAny(text, KNOWLEDGE_KEYWORDS) || KNOWLEDGE_PATTERNS.some((p) => p.test(text)),
@@ -974,6 +975,7 @@ function RobbyOverlay({ promptText, lang = "tr" }) {
       de: ["du bist ein", "du bist eine", "als ein ", "als eine ", "in der rolle", "übernimm die rolle"],
       tr: ["sen bir", "senin rolün", "gibi davran", "rolünde"],
     };
+    var ROLE_PATTERNS = [/\bsen\b(?:\s+\S+){0,3}\s+bir\b/i];
     var OBJECTIVE_KEYWORDS = {
       en: ["write", "explain", "summarize", "create", "list", "compare", "translate", "solve", "design"],
       de: ["schreibe", "erkläre", "fasse zusammen", "erstelle", "liste", "vergleiche", "übersetze", "löse"],
@@ -1011,7 +1013,7 @@ function RobbyOverlay({ promptText, lang = "tr" }) {
     function analyzePromptROCKS(promptText) {
       var text = (promptText || "").trim();
       var matched = {
-        role: containsAny(text, ROLE_KEYWORDS),
+        role: containsAny(text, ROLE_KEYWORDS) || ROLE_PATTERNS.some(function (p) { return p.test(text); }),
         objective: containsAny(text, OBJECTIVE_KEYWORDS),
         context: containsAny(text, CONTEXT_KEYWORDS),
         knowledge: containsAny(text, KNOWLEDGE_KEYWORDS) || KNOWLEDGE_PATTERNS.some(function (p) { return p.test(text); }),
