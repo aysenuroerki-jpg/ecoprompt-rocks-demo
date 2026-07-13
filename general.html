@@ -150,6 +150,46 @@
     margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line);
     font-size: 12.5px; color: var(--ink-faint); max-width: 60ch;
   }
+
+  /* generator */
+  .gen-panel {
+    margin-top: 32px; border: 1px solid var(--line); border-radius: 14px; padding: 22px; background: var(--paper-raised);
+  }
+  .gen-title { font-family: var(--font-display); font-weight: 800; font-size: 18px; margin: 0 0 4px; }
+  .gen-hint { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 14px; }
+  .gen-domains { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .gen-domain-btn {
+    font-family: var(--font-body); font-size: 13px; padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .gen-domain-btn:hover { border-color: var(--brand); color: var(--brand); }
+  .gen-domain-btn.active { background: var(--brand-soft); border-color: var(--brand); color: var(--brand); font-weight: 700; }
+  .gen-input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .gen-topic {
+    flex: 1; min-width: 200px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+    font-family: var(--font-body); font-size: 14px; background: var(--paper); color: var(--ink);
+  }
+  .gen-topic:focus-visible { outline: 2px solid var(--river); outline-offset: 1px; }
+  .gen-btn {
+    font-family: var(--font-mono); font-size: 13px; padding: 10px 18px; border-radius: 7px;
+    border: none; background: var(--brand); color: var(--paper-raised); cursor: pointer; font-weight: 600;
+  }
+  .gen-btn:hover { filter: brightness(1.08); }
+  .gen-output { margin-top: 16px; display: none; }
+  .gen-output.show { display: block; }
+  .gen-output-box {
+    border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; background: var(--paper);
+    font-family: var(--font-mono); font-size: 12.8px; line-height: 1.65; color: var(--ink);
+    white-space: pre-wrap; max-height: 260px; overflow-y: auto;
+  }
+  .gen-output-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .gen-copy-btn, .gen-try-btn {
+    font-family: var(--font-mono); font-size: 12px; padding: 7px 14px; border-radius: 7px;
+    border: 1px solid var(--line); background: var(--paper-raised); color: var(--ink-soft); cursor: pointer;
+  }
+  .gen-copy-btn:hover, .gen-try-btn:hover { border-color: var(--brand); color: var(--brand); }
+  .gen-copy-btn.copied { border-color: var(--brand); color: var(--brand); }
 </style>
 
 <div class="shell">
@@ -159,6 +199,27 @@
   <div class="chips">
     <span class="chip">Yeni başlayanlar için</span>
     <span class="chip">ChatGPT · Gemini · Claude'da çalışan gerçek bir eklentinin motoru</span>
+  </div>
+
+  <div class="gen-panel">
+    <div class="gen-title">Alanına göre prompt oluştur</div>
+    <p class="gen-hint">Eğitim, iş ya da proje — hangisi için yazıyorsan seç, konuyu yaz, sana hazır bir ROCKS şablonu çıkarayım. Köşeli parantezleri kendi detaylarınla değiştirip doğrudan ChatGPT/Gemini/Claude'a yapıştırabilirsin.</p>
+    <div class="gen-domains" id="gen-domains">
+      <button type="button" class="gen-domain-btn active" data-domain="egitim">🎓 Eğitim</button>
+      <button type="button" class="gen-domain-btn" data-domain="is">💼 İş</button>
+      <button type="button" class="gen-domain-btn" data-domain="proje">🚀 Proje</button>
+    </div>
+    <div class="gen-input-row">
+      <input type="text" id="gen-topic" class="gen-topic" placeholder="Ne hakkında? Örn: Python'da bir web scraper" />
+      <button type="button" id="gen-btn" class="gen-btn">Oluştur</button>
+    </div>
+    <div class="gen-output" id="gen-output">
+      <div class="gen-output-box" id="gen-output-box"></div>
+      <div class="gen-output-actions">
+        <button type="button" id="gen-copy-btn" class="gen-copy-btn">Kopyala</button>
+        <button type="button" id="gen-try-btn" class="gen-try-btn">Bu şablonu aşağıda analiz et ↓</button>
+      </div>
+    </div>
   </div>
 
   <div class="demo-panel">
@@ -308,6 +369,34 @@
       strong: "Sen bir tarih öğretmenisin. 5. sınıf öğrencisi için, çünkü yarın sınavım var, Viyana'nın kuruluşu hakkında 100 kelimeyi geçmeyen, madde madde ve basit bir dille bir özet yaz.",
     };
 
+    var DOMAIN_TEMPLATES = {
+      egitim: function (topic) {
+        var subject = topic || "[konu]";
+        return "Sen deneyimli bir " + subject + " eğitmenisin.\n\n" +
+          "Amaç: " + subject + " konusunu, bu konuya yeni başlayan biri için adım adım açıkla.\n\n" +
+          "Bağlam: Bunu öğrenmek istiyorum çünkü [buraya sebebini yaz — sınav, iş, merak vb.].\n\n" +
+          "Bilgi: [Buraya zaten bildiğin şeyleri veya seviyeni yaz, örn. 'hiç bilmiyorum' ya da 'temel düzeyde biliyorum'.]\n\n" +
+          "Stil: Basit bir dille, gerçek örneklerle ve madde madde anlat. Uzun paragraflardan kaçın.";
+      },
+      is: function (topic) {
+        var subject = topic || "[konu/proje]";
+        return "Sen deneyimli bir " + subject + " danışmanısın.\n\n" +
+          "Amaç: " + subject + " için uygulanabilir bir plan/strateji hazırla.\n\n" +
+          "Bağlam: [Buraya şirket/ekip büyüklüğünü, bütçeyi veya zaman kısıtını yaz.]\n\n" +
+          "Bilgi: Şu an elimde şu veriler/durum var: [buraya mevcut durumu yaz].\n\n" +
+          "Stil: Profesyonel ama anlaşılır bir dille, net aksiyon maddeleri halinde yaz. Gereksiz jargon kullanma.";
+      },
+      proje: function (topic) {
+        var subject = topic || "[proje adı]";
+        return "Sen kıdemli bir yazılım mühendisisin.\n\n" +
+          "Amaç: " + subject + " üzerinde çalışıyorum, [buraya tam olarak ne yapmak istediğini yaz — yeni özellik, hata düzeltme, sıfırdan kurulum vb.].\n\n" +
+          "Bağlam: Bu bir [buraya dil/framework yaz, örn. React + Node.js] projesi. [Varsa zaman/teknoloji kısıtını ekle.]\n\n" +
+          "Bilgi: Şu an elimde şunlar var: [mevcut kod/dosya yapısını ya da linkini yaz].\n\n" +
+          "Stil: Kodu adım adım, her değişikliği kısaca açıklayarak ver. Varsayım yapman gerekirse önce sor.";
+      },
+    };
+    var activeDomain = "egitim";
+
     var lang = "tr";
     var state = { clarity: 70, coins: 0, submissions: 0 };
 
@@ -404,6 +493,55 @@
         render();
         els.textarea.focus();
       });
+    });
+
+    var genEls = {
+      domains: document.getElementById("gen-domains"),
+      topic: document.getElementById("gen-topic"),
+      genBtn: document.getElementById("gen-btn"),
+      output: document.getElementById("gen-output"),
+      outputBox: document.getElementById("gen-output-box"),
+      copyBtn: document.getElementById("gen-copy-btn"),
+      tryBtn: document.getElementById("gen-try-btn"),
+    };
+
+    genEls.domains.querySelectorAll(".gen-domain-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        genEls.domains.querySelectorAll(".gen-domain-btn").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        activeDomain = btn.getAttribute("data-domain");
+      });
+    });
+
+    function generateTemplate() {
+      var topic = genEls.topic.value.trim();
+      var template = DOMAIN_TEMPLATES[activeDomain](topic);
+      genEls.outputBox.textContent = template;
+      genEls.output.classList.add("show");
+      return template;
+    }
+
+    genEls.genBtn.addEventListener("click", generateTemplate);
+    genEls.topic.addEventListener("keydown", function (evt) {
+      if (evt.key === "Enter") generateTemplate();
+    });
+
+    genEls.copyBtn.addEventListener("click", function () {
+      navigator.clipboard.writeText(genEls.outputBox.textContent).then(function () {
+        genEls.copyBtn.textContent = "Kopyalandı ✓";
+        genEls.copyBtn.classList.add("copied");
+        setTimeout(function () {
+          genEls.copyBtn.textContent = "Kopyala";
+          genEls.copyBtn.classList.remove("copied");
+        }, 1800);
+      });
+    });
+
+    genEls.tryBtn.addEventListener("click", function () {
+      els.textarea.value = genEls.outputBox.textContent;
+      render();
+      els.textarea.scrollIntoView({ behavior: "smooth", block: "center" });
+      els.textarea.focus();
     });
 
     renderGarden();
